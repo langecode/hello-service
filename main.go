@@ -12,6 +12,10 @@ import (
 
 const ServiceName = "hello-service"
 
+func healthzHandler(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte("ok"))
+}
+
 func httpHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello, World!")
 }
@@ -21,6 +25,7 @@ func main() {
 	telemetryHandler := otelhttp.NewHandler(handler, ServiceName)
 	http.Handle("/hello", telemetryHandler)
 
+	http.HandleFunc("/healthz", healthzHandler)
 	initMetrics()
 	cleanup := initTracing()
 	defer cleanup()
