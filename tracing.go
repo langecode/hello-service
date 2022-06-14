@@ -5,7 +5,9 @@ import (
 	"time"
 
 	"github.com/rs/zerolog/log"
+	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracegrpc"
+	"go.opentelemetry.io/otel/propagation"
 	"go.opentelemetry.io/otel/sdk/resource"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
 	semconv "go.opentelemetry.io/otel/semconv/v1.7.0"
@@ -33,6 +35,9 @@ func initTracing() func() {
 		sdktrace.WithResource(res),
 		sdktrace.WithSpanProcessor(bsp),
 	)
+
+	otel.SetTextMapPropagator(propagation.TraceContext{})
+	otel.SetTracerProvider(tracerProvider)
 
 	return func() {
 		// Shutdown will flush any remaining spans and shut down the exporter.
