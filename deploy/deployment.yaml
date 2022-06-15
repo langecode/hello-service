@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-service
+  labels:
+    app.kubernetes.io/instance: hello-service
+    app.kubernetes.io/managed-by: Kustomize
+    app.kubernetes.io/name: hello-service
+    app.kubernetes.io/version: latest
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: hello-service
+      app.kubernetes.io/name: hello-service
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      annotations:
+        sidecar.opentelemetry.io/inject: "true"
+      labels:
+        app.kubernetes.io/instance: hello-service
+        app.kubernetes.io/managed-by: Kustomize
+        app.kubernetes.io/name: hello-service
+        app.kubernetes.io/version: latest
+        netic.dk/network-ingress: contour
+    spec:
+      containers:
+        - name: app
+          image: ghcr.io/langecode/hello-service:main
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              port: http
+              path: /healthz
+          livenessProbe:
+            httpGet:
+              port: http
+              path: /healthz
+          resources:
+            limits:
+              cpu: 100m
+              memory: 32Mi
+            requests:
+              cpu: 50m
+              memory: 32Mi
+          # securityContext:
+          #   allowPrivilegeEscalation: false
+          #   capabilities:
+          #     drop:
+          #       - ALL
+          #   runAsNonRoot: true
+          #   runAsUser: 1000

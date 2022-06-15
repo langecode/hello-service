@@ -1,0 +1,14 @@
+apiVersion: project.tcs.trifork.com/v1alpha1
+kind: ProjectBootstrap
+metadata:
+  name: netic-goto-app
+  namespace: netic-gitops-system
+spec:
+  namespace: netic-goto-app
+  config:
+    ref: default
+    size: medium
+  git:
+    branch: main
+    path: deploy
+  metadata: {}

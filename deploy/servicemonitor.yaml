@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: hello-service
+  labels:
+    app.kubernetes.io/instance: hello-service
+    app.kubernetes.io/managed-by: Kustomize
+    app.kubernetes.io/name: hello-service
+    app.kubernetes.io/version: latest
+    netic.dk/monitoring: "true"
+spec:
+  endpoints:
+  - port: http
+    interval: 15s
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: hello-service
+      app.kubernetes.io/name: hello-service
