@@ -19,7 +19,7 @@ func healthzHandler(w http.ResponseWriter, r *http.Request) {
 
 func httpHandler(w http.ResponseWriter, r *http.Request) {
 	span := trace.SpanFromContext(r.Context())
-	log.Info().Str("TraceID", span.SpanContext().TraceID().String()).Msg("Echo service")
+	log.Info().Str("TraceID", span.SpanContext().TraceID().String()).Msg("Hello Service")
 
 	fmt.Fprintf(w, "Hello, World!")
 }
