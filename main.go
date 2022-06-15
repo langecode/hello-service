@@ -8,6 +8,7 @@ import (
 	"github.com/gorilla/handlers"
 	"github.com/rs/zerolog/log"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
+	"go.opentelemetry.io/otel/trace"
 )
 
 const ServiceName = "hello-service"
@@ -17,6 +18,9 @@ func healthzHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func httpHandler(w http.ResponseWriter, r *http.Request) {
+	span := trace.SpanFromContext(r.Context())
+	log.Info().Str("TraceID", span.SpanContext().TraceID().String()).Msg("Echo service")
+
 	fmt.Fprintf(w, "Hello, World!")
 }
 
