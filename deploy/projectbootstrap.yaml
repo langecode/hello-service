@@ -11,4 +11,3 @@ spec:
   git:
     branch: main
     path: deploy
-  metadata: {}
